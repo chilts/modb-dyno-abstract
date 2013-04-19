@@ -6,9 +6,8 @@ Current implementations are:
 
 * [dyno-memory](https://github.com/chilts/dyno-memory/)
 * [dyno-leveldb](https://github.com/chilts/dyno-leveldb/)
-* [dyno-redis](https://github.com/chilts/dyno-redis/)
-* [dyno-memory](https://github.com/chilts/dyno-memory/)
-* [dyno-pg](https://github.com/chilts/dyno-pg/)
+* dyno-redis (soon)
+* dyno-pg (soon)
 
 ## Changesets ##
 
