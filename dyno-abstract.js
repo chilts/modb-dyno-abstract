@@ -136,7 +136,11 @@ DynoAbstract.prototype.instrumentChangesets = function instrumentChangesets(chan
 DynoAbstract.prototype.reduce = function reduce(changesets) {
     var self = this;
 
-    var item = {};
+    if ( typeof changesets === 'undefined' ) {
+        return {};
+    }
+
+    var value = {};
 
     var totalChanges = 0;
     var lastTimestamp;
@@ -152,7 +156,7 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
         if ( changeset.operation === 'history' ) {
             currentHash  = changeset.hash;
             totalChanges = changeset.changes;
-            item         = changeset.item;
+            value        = changeset.value;
         }
         else {
             // this is a regular operation
@@ -171,22 +175,22 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
         lastHash      = currentHash;
 
         // perform this operation
-        item = self.performOp(item, changeset.operation, changeset.change);
+        value = self.performOp(value, changeset.operation, changeset.change);
     });
 
-    if ( Object.keys(item).length === 0 ) {
-        item = undefined;
+    if ( Object.keys(value).length === 0 ) {
+        value = undefined;
     }
 
     // create the last changeset (minus the name and operations)
-    var changeset = {
+    var item = {
         timestamp : lastTimestamp,
-        value     : item,
+        value     : value,
         changes   : totalChanges,
         hash      : lastHash,
     };
 
-    return changeset;
+    return item;
 }
 
 // ----------------------------------------------------------------------------
@@ -204,19 +208,6 @@ DynoAbstract.prototype._putOperation = function(operationName, itemName, timesta
 // This retrieves all changesets for this item
 DynoAbstract.prototype._getChangesets = function(itemName, callback) {
     throw new Error('Classes derived from DynoAbstract should implement _getChangesets()');
-};
-
-// _get(name, callback) -> (err, item)
-//
-// This gets the changesets from the backend storage and then reduces it to the item.
-DynoAbstract.prototype._get = function(name, callback) {
-    var self = this;
-
-    // firstly, get the changesets, then reduce them to the item
-    self._getChangesets(name, function(err, changesets) {
-        if (err) return callback(err);
-        callback(null, changesets);
-    });
 };
 
 // ----------------------------------------------------------------------------
@@ -308,6 +299,43 @@ DynoAbstract.prototype.addToSet = function(itemName, timestamp, attrName, value,
 
 // ----------------------------------------------------------------------------
 
+// flatten(itemName, hash) -> (err)
+//
+// This gets out all of the changes for this itemName and instruments them with
+// their changes and hashes. It then loops through each one and checks to see if
+// it correlates with the hash provided.
+//
+// At this point it replaces the history up to this point with flattened history
+// operation.
+//
+// If we run through the entire item's history and we never find the hash
+// then we'll return an error.
+DynoAbstract.prototype.flatten = function(itemName, flattenToHash, callback) {
+    var self = this;
+
+    console.log('flatten(): entry - hash=' + flattenToHash);
+
+    // firstly, get the history
+    self._getChangesets(itemName, function(err, changesets) {
+        if (err) return callback(err);
+
+        // instrument the changesets with their meta data
+        changesets = self.instrumentChangesets(changesets);
+
+        // now loop through finding the hash
+        var upto;
+        changesets.forEach(function(changeset, i) {
+            if ( changeset.hash === flattenToHash ) {
+                upto = i;
+            }
+        });
+        console.log('Found hash at position ' + upto);
+        callback(null, upto);
+    });
+};
+
+// ----------------------------------------------------------------------------
+
 // getItem(name) -> (err, item)
 //
 // This gets the item and returns it. It reads *all* of the actions that have happened so far
@@ -317,8 +345,12 @@ DynoAbstract.prototype.getItem = function(name, callback) {
 
     console.log('Getting ' + name + ' ...');
 
-    self._get(name, function(err, changesets) {
+    self._getChangesets(name, function(err, changesets) {
         if (err) return callback(err);
+
+        if ( typeof changesets === 'undefined' ) {
+            return callback(null, {});
+        }
 
         console.log('changesets:', changesets);
 
