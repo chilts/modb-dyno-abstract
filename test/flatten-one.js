@@ -23,7 +23,7 @@ module.exports = function(db) {
     test('test putItem()', function(t) {
         // put an item
         db.putItem('chilts', timestamp1, item, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'flatten-one: No error when putting an item');
             t.end();
         });
     });
@@ -31,18 +31,18 @@ module.exports = function(db) {
     test('test flatten()', function(t) {
         // get this item back
         db.getItem('chilts', function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'flatten-one: No error when getting an item back');
 
-            t.deepEqual(changeset.value, item, 'Check the stored item is correct');
+            t.deepEqual(changeset.value, item, 'flatten-one: Check the stored item is correct');
 
             // test that we know what the hash is of
             var hashThis = 'chilts/013d58c7276e-0000-188c-786ae2e1f629/putItem\n{"nick":"chilts"}\n';
             var hash = crypto.createHash('md5').update(hashThis).digest('hex');
-            t.equal(changeset.hash, hash, 'The calculated hash and the one we expect are the same');
-            t.equal(changeset.hash, 'dbdbab3832f5594e33ded7e286551518', 'The last hash of this item should be this');
+            t.equal(changeset.hash, hash, 'flatten-one: The calculated hash and the one we expect are the same');
+            t.equal(changeset.hash, 'dbdbab3832f5594e33ded7e286551518', 'flatten-one: The last hash of this item should be this');
 
             db.flatten('chilts', changeset.hash, function(err) {
-                t.ok(!err, 'No error when flattening an item');
+                t.ok(!err, 'flatten-one: No error when flattening an item');
                 t.end();
             });
         });

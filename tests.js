@@ -19,10 +19,10 @@ module.exports = function(newDynoFn) {
 
     // flattening items
     require('./test/flatten-one.js')(newDynoFn());
-    require('./test/flatten-three.js')(newDynoFn());
+    require('./test/flatten-unchanged.js')(newDynoFn());
     require('./test/flatten-twice.js')(newDynoFn());
-    require('./test/flatten-twice-no-changes.js')(newDynoFn());
     require('./test/flatten-two.js')(newDynoFn());
+    require('./test/flatten-three.js')(newDynoFn());
 
     // queries and scans
     require('./test/query.js')(newDynoFn());
