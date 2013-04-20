@@ -26,6 +26,8 @@ module.exports = function(db) {
     var timestamp1 = '013d58c7276e-0000-188c-786ae2e1f629';
     var timestamp2 = '013d58c7276f-0000-188c-786ae2e1f629';
     var timestamp3 = '013d58c7286f-0000-188c-786ae2e1f629';
+    var hash1 = '2b847185c137c7f8ff54bf5ebf72bb6e';
+    var hash2 = '2b2fab567713b6f22132e049e0690a9f';
 
     test('test putItem()', function(t) {
         // put an item
@@ -38,9 +40,9 @@ module.exports = function(db) {
                 t.deepEqual(changeset.value, item, 'flatten-unchanged: (1) Check the stored item is correct');
 
                 // test that we know what the hash is of
-                t.equal(changeset.hash, 'dbdbab3832f5594e33ded7e286551518', 'flatten-unchanged: (1) The last hash of this item should be this');
+                t.equal(changeset.hash, hash1, 'flatten-unchanged: (1) The last hash of this item should be this');
 
-                var hashThis = 'chilts/013d58c7276e-0000-188c-786ae2e1f629/putItem\n{"nick":"chilts"}\n';
+                var hashThis = '\nchilts\n013d58c7276e-0000-188c-786ae2e1f629\nputItem\n{"nick":"chilts"}\n';
                 var hash = crypto.createHash('md5').update(hashThis).digest('hex');
                 t.equal(changeset.hash, hash, 'flatten-unchanged: (1) The calculated hash and the one we expect are the same');
 
@@ -49,7 +51,7 @@ module.exports = function(db) {
         });
     });
 
-    test('test put()', function(t) {
+    test('test set()', function(t) {
         db.set('chilts', timestamp2, { logins : 10 }, function(err) {
             t.ok(!err, 'flatten-unchanged: (2) No error when putting some attributes');
 
@@ -59,10 +61,10 @@ module.exports = function(db) {
                 t.deepEqual(changeset.value, expectedItem, 'flatten-unchanged: (2) Check the stored item is correct');
 
                 // test that we know what the hash is of
-                t.equal(changeset.hash, '897547f3b4f8f6e09785a8aa3e79e32d', 'flatten-unchanged: (2) The last hash of this item should be this');
+                t.equal(changeset.hash, hash2, 'flatten-unchanged: (2) The last hash of this item should be this');
 
-                var hashThis = "dbdbab3832f5594e33ded7e286551518\n";
-                hashThis += "chilts/013d58c7276f-0000-188c-786ae2e1f629/put\n";
+                var hashThis = hash1 + "\n";
+                hashThis += "chilts\n013d58c7276f-0000-188c-786ae2e1f629\nset\n";
                 hashThis += '{"logins":10}\n';
 
                 var hash = crypto.createHash('md5').update(hashThis).digest('hex');

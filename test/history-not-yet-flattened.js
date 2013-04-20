@@ -48,7 +48,7 @@ module.exports = function(db) {
             t.equal(changesets.length, 3, 'The number of changesets is 3');
             t.equal(changesets[0].operation, 'putItem', 'First op is a putItem');
             t.equal(changesets[1].operation, 'del', 'Second op is a del');
-            t.equal(changesets[2].operation, 'put', 'Third op is a put');
+            t.equal(changesets[2].operation, 'set', 'Third op is a set');
             t.equal(changesets[0].timestamp, '0001', 'ts=0001');
             t.equal(changesets[1].timestamp, '0002', 'ts=0002');
             t.equal(changesets[2].timestamp, '0003', 'ts=0003');

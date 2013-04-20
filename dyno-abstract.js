@@ -105,18 +105,33 @@ DynoAbstract.prototype.instrumentChangesets = function instrumentChangesets(chan
             currentItem  = changeset.item;
         }
         else {
+            // Hash strings are made up of the following:
+            //
+            // \n or lastHash\n (if available)
+            // itemName\n
+            // timestamp\n
+            // operationName\n
+            // changeAsJson\n
+
             // this is a regular operation
             var hashThis = '';
             if ( lastHash ) {
                 hashThis = lastHash + "\n";
             }
-            hashThis += changeset.name + '/' + changeset.timestamp + '/' + changeset.operation + "\n";
+            hashThis += changeset.name + "\n";
+            hashThis += changeset.timestamp + "\n";
+            hashThis += changeset.operation + "\n";
             hashThis += JSON.stringify(changeset.change) + "\n";
-            currentHash = crypto.createHash('md5').update(hashThis).digest('hex');
             console.log('---');
             console.log(hashThis);
             console.log('---');
+
+            // now hash it
+            currentHash = crypto.createHash('md5').update(hashThis).digest('hex');
+
+            // increment the number of changes
             totalChanges++;
+
             // save the actual change itself
             thisValue = changeset.change;
         }
@@ -157,6 +172,7 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
             currentHash  = changeset.hash;
             totalChanges = changeset.changes;
             value        = changeset.value;
+            console.log('HASHING:' + changeset.value + "\n");
         }
         else {
             // this is a regular operation
@@ -164,9 +180,12 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
             if ( lastHash ) {
                 hashThis = lastHash + "\n";
             }
-            hashThis += changeset.name + "\n" + changeset.operation + "\n" + changeset.timestamp + "\n";
-            hashThis += changeset.name + "\n" + changeset.operation + "\n" + changeset.timestamp + "\n";
-            hashThis += changeset.name + "\n" + changeset.operation + "\n" + changeset.timestamp + "\n";
+            else {
+                hashThis = "\n";
+            }
+            hashThis += changeset.name + "\n";
+            hashThis += changeset.timestamp + "\n";
+            hashThis += changeset.operation + "\n";
             hashThis += JSON.stringify(changeset.change) + "\n";
             console.log('HASHING:' + hashThis + "\n");
             currentHash = crypto.createHash('md5').update(hashThis).digest('hex');
