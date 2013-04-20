@@ -15,7 +15,7 @@ module.exports = function(newDynoFn) {
     require('./test/history.js')(newDynoFn());
     require('./test/history-not-yet-flattened.js')(newDynoFn());
     require('./test/putAttrs.js')(newDynoFn());
-    // require('./test/query.js');
+    require('./test/query.js')(newDynoFn());
     // require('./test/scan.js');
     require('./test/sets.js')(newDynoFn());
 };
