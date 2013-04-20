@@ -28,7 +28,7 @@ DynoAbstract.prototype.performOp = function performOp(item, op, value) {
     else if ( op === 'delItem' ) {
         item = {};
     }
-    else if ( op === 'put' ) {
+    else if ( op === 'set' ) {
         item = _.extend(item, value);
     }
     else if ( op === 'del' ) {
@@ -164,8 +164,11 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
             if ( lastHash ) {
                 hashThis = lastHash + "\n";
             }
-            hashThis += changeset.name + '/' + changeset.timestamp + '/' + changeset.operation + "\n";
+            hashThis += changeset.name + "\n" + changeset.operation + "\n" + changeset.timestamp + "\n";
+            hashThis += changeset.name + "\n" + changeset.operation + "\n" + changeset.timestamp + "\n";
+            hashThis += changeset.name + "\n" + changeset.operation + "\n" + changeset.timestamp + "\n";
             hashThis += JSON.stringify(changeset.change) + "\n";
+            console.log('HASHING:' + hashThis + "\n");
             currentHash = crypto.createHash('md5').update(hashThis).digest('hex');
             totalChanges++;
         }
@@ -231,12 +234,12 @@ DynoAbstract.prototype.delItem = function(itemName, timestamp, callback) {
     self._putOperation('delItem', itemName, timestamp, {}, callback);
 };
 
-// put(itemName, timestamp, obj, callback) -> (err)
+// set(itemName, timestamp, obj, callback) -> (err)
 //
 // This replaces just the attributes given in the item specified.
-DynoAbstract.prototype.put = function(itemName, timestamp, obj, callback) {
+DynoAbstract.prototype.set = function(itemName, timestamp, obj, callback) {
     var self = this;
-    self._putOperation('put', itemName, timestamp, obj, callback);
+    self._putOperation('set', itemName, timestamp, obj, callback);
 };
 
 // del(itemName, timestamp, attrNames, callback) -> (err)
