@@ -27,7 +27,7 @@ module.exports = function(db) {
         });
     });
 
-    test('test put()', function(t) {
+    test('test set()', function(t) {
         db.set('chilts', ts(), { email : 'me@example.com', logins : 28, admin : true }, function(err) {
             t.ok(!err, 'set: No error when putting some attributes');
             t.end();
