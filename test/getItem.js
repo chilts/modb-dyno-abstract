@@ -24,7 +24,7 @@ module.exports = function(db) {
     test('test putItem', function(t) {
         // put an item
         db.putItem('chilts', timestamp, item, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'getItem: No error when putting an item');
             t.end();
         });
     });
@@ -46,8 +46,8 @@ module.exports = function(db) {
         // get this item back
         db.getItem('pie', function(err, item) {
             console.log(item);
-            t.ok(!err, 'No error when getting an item back');
-            t.equal(item.value, undefined, 'Item is undefined');
+            t.ok(!err, 'getItem: No error when getting an item back');
+            t.equal(item.value, undefined, 'getItem: Item is undefined');
             t.end();
         });
     });

@@ -28,7 +28,7 @@ module.exports = function(db) {
                 i++;
                 db.putItem(item, ts(), { id : i, nick : item }, function(err) {
                     db.inc(item, ts(), 'logins', function(err) {
-                        db.put(item, ts(), { upper : item.toUpperCase() }, function(err) {
+                        db.set(item, ts(), { upper : item.toUpperCase() }, function(err) {
                             db.inc(item, ts(), 'logins', done);
                         });
                     });

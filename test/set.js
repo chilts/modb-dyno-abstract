@@ -22,14 +22,14 @@ module.exports = function(db) {
     test('test putItem()', function(t) {
         // put an item
         db.putItem('chilts', ts(), item, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'set: No error when putting an item');
             t.end();
         });
     });
 
     test('test put()', function(t) {
-        db.put('chilts', ts(), { email : 'me@example.com', logins : 28, admin : true }, function(err) {
-            t.ok(!err, 'No error when putting some attributes');
+        db.set('chilts', ts(), { email : 'me@example.com', logins : 28, admin : true }, function(err) {
+            t.ok(!err, 'set: No error when putting some attributes');
             t.end();
         });
     });
@@ -37,7 +37,7 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem('chilts', function(err, changesets) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'set: No error when getting an item back');
 
             var newItem = {
                 nick : 'chilts',
@@ -49,7 +49,7 @@ module.exports = function(db) {
 
             console.log(changesets);
 
-            t.deepEqual(changesets.value, newItem, 'Item has been modified ok (put())');
+            t.deepEqual(changesets.value, newItem, 'set: Item has been modified ok (put())');
             t.end();
         });
     });

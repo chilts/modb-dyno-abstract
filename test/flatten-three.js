@@ -50,8 +50,7 @@ module.exports = function(db) {
     });
 
     test('test put()', function(t) {
-        // put an item
-        db.put('chilts', timestamp2, { logins : 10 }, function(err) {
+        db.set('chilts', timestamp2, { logins : 10 }, function(err) {
             t.ok(!err, 'No error when putting some attributes');
 
             db.getItem('chilts', function(err, item) {

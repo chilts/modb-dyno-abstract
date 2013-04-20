@@ -54,8 +54,7 @@ module.exports = function(db) {
     });
 
     test('test put()', function(t) {
-        // add some more attrs, then get it back out again
-        db.put('chilts', timestamp2, { 'admin' : true }, function(err, storedItem, meta) {
+        db.set('chilts', timestamp2, { 'admin' : true }, function(err, storedItem, meta) {
             t.ok(!err, 'history: No error when putting some attributes');
 
             // get this item back

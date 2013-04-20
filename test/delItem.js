@@ -22,17 +22,16 @@ module.exports = function(db) {
     test('test putItem', function(t) {
         // put an item
         db.putItem('chilts', ts(), item, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'delItem: No error when putting an item');
             t.end();
         });
     });
 
     test('test delItem', function(t) {
-        console.log('1');
         // delete this item
         db.delItem('chilts', ts(), function(err) {
             console.log('2');
-            t.ok(!err, 'No error when deleting this item');
+            t.ok(!err, 'delItem: No error when deleting this item');
             t.end();
         });
     });
@@ -40,8 +39,8 @@ module.exports = function(db) {
     test('test getItem (no item found)', function(t) {
         // get this item back
         db.getItem('chilts', function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
-            t.equal(changeset.value, undefined, 'Item is undefined');
+            t.ok(!err, 'delItem: No error when getting an item back');
+            t.equal(changeset.value, undefined, 'delItem: Item is undefined');
             t.end();
         });
     });

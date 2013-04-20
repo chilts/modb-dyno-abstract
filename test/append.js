@@ -20,14 +20,14 @@ module.exports = function(db) {
     test('test putItem()', function(t) {
         // put an item
         db.putItem(itemName, ts(), item, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'append: No error when putting an item');
             t.end();
         });
     });
 
     test('test append()', function(t) {
         db.append(itemName, ts(), 'something', ':more', function(err) {
-            t.ok(!err, 'No error when appending an attribute');
+            t.ok(!err, 'append: No error when appending an attribute');
             t.end();
         });
     });
@@ -35,13 +35,13 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem(itemName, function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'append: No error when getting an item back');
 
             var newItem = {
                 something : 'here:more',
             };
 
-            t.deepEqual(changeset.value, newItem, 'Item has been modified ok (append())');
+            t.deepEqual(changeset.value, newItem, 'append: Item has been modified ok (append())');
             t.end();
         });
     });
@@ -51,17 +51,17 @@ module.exports = function(db) {
 
     test('test append() to an empty attribute', function(t) {
         db.append('other', ts(), 'something', 'here', function(err) {
-            t.ok(!err, 'No error when incrementing an attribute on a new item');
+            t.ok(!err, 'append: No error when incrementing an attribute on a new item');
 
             // get this item back
             db.getItem('other', function(err, changeset) {
-                t.ok(!err, 'No error when getting the other item back');
+                t.ok(!err, 'append: No error when getting the other item back');
 
                 var newItem = {
                     something : 'here',
                 };
 
-                t.deepEqual(changeset.value, newItem, 'Item has been modified ok (append() on empty)');
+                t.deepEqual(changeset.value, newItem, 'append: Item has been modified ok (append() on empty)');
                 t.end();
             });
         });

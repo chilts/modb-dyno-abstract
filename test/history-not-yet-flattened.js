@@ -37,8 +37,7 @@ module.exports = function(db) {
     });
 
     test('test chilts()', function(t) {
-        // get this item back
-        db.put('chilts', next(), { admin : true, logins : 0 }, function(err) {
+        db.set('chilts', next(), { admin : true, logins : 0 }, function(err) {
             t.ok(!err, 'No error when adding some attributes');
             t.end();
         });

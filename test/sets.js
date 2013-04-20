@@ -19,14 +19,14 @@ module.exports = function(db) {
     test('test putItem()', function(t) {
         // put an item
         db.putItem(itemName1, ts(), {}, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'sets: No error when putting an item');
             t.end();
         });
     });
 
     test('test addToSet()', function(t) {
         db.addToSet(itemName1, ts(), 'set', 'red', function(err) {
-            t.ok(!err, 'No error when adding a value to a set');
+            t.ok(!err, 'sets: No error when adding a value to a set');
             t.end();
         });
     });
@@ -34,13 +34,13 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem(itemName1, function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'sets: No error when getting an item back');
 
             var newItem = {
                 set : { 'red' : true },
             };
 
-            t.deepEqual(changeset.value, newItem, 'Item has been modified ok (addToSet())');
+            t.deepEqual(changeset.value, newItem, 'sets: Item has been modified ok (addToSet())');
             t.end();
         });
     });
@@ -51,14 +51,14 @@ module.exports = function(db) {
     test('test putItem()', function(t) {
         // put an item
         db.putItem(itemName2, ts(), { set : 'red' }, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'sets: No error when putting an item');
             t.end();
         });
     });
 
     test('test addToSet()', function(t) {
         db.addToSet(itemName2, ts(), 'set', 'blue', function(err) {
-            t.ok(!err, 'No error when adding a value to a set');
+            t.ok(!err, 'sets: No error when adding a value to a set');
             t.end();
         });
     });
@@ -66,13 +66,13 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem(itemName2, function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'sets: No error when getting an item back');
 
             var newItem = {
                 set : { red : true, blue : true },
             };
 
-            t.deepEqual(changeset.value, newItem, 'Item has been modified ok (addToSet() to now have two items in the set)');
+            t.deepEqual(changeset.value, newItem, 'sets: Item has been modified ok (addToSet() to now have two items in the set)');
             t.end();
         });
     });
@@ -82,17 +82,17 @@ module.exports = function(db) {
 
     test('test addToSet() to an empty attribute', function(t) {
         db.addToSet('other', ts(), 'set', 'red', function(err) {
-            t.ok(!err, 'No error when incrementing an attribute on a new item');
+            t.ok(!err, 'sets: No error when incrementing an attribute on a new item');
 
             // get this item back
             db.getItem('other', function(err, changeset) {
-                t.ok(!err, 'No error when getting the other item back');
+                t.ok(!err, 'sets: No error when getting the other item back');
 
                 var newItem = {
                     set : { 'red' : true },
                 };
 
-                t.deepEqual(changeset.value, newItem, 'Item has been modified ok (addToSet() on empty)');
+                t.deepEqual(changeset.value, newItem, 'sets: Item has been modified ok (addToSet() on empty)');
                 t.end();
             });
         });

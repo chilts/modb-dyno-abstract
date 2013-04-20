@@ -23,16 +23,16 @@ module.exports = function(db) {
     test('test putItem()', function(t) {
         // put an item
         db.putItem('chilts', ts(), item, function(err) {
-            t.ok(!err, 'No error when putting an item');
+            t.ok(!err, 'add: No error when putting an item');
             t.end();
         });
     });
 
     test('test incBy()', function(t) {
         db.incBy('chilts', ts(), 'logins', 1, function(err) {
-            t.ok(!err, 'No error when incrementing an attribute');
+            t.ok(!err, 'add: No error when incrementing an attribute');
             db.decBy('chilts', ts(), 'lives', 1, function(err) {
-                t.ok(!err, 'No error when decrementing an attribute');
+                t.ok(!err, 'add: No error when decrementing an attribute');
                 t.end();
             });
         });
@@ -41,7 +41,7 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem('chilts', function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'add: No error when getting an item back');
 
             var newItem = {
                 nick : 'chilts',
@@ -53,16 +53,16 @@ module.exports = function(db) {
 
             console.log(changeset);
 
-            t.deepEqual(changeset.value, newItem, 'Item has been modified ok (incBy())');
+            t.deepEqual(changeset.value, newItem, 'add: Item has been modified ok (incBy())');
             t.end();
         });
     });
 
     test('test inc()/dec()', function(t) {
         db.inc('chilts', ts(), 'logins', function(err) {
-            t.ok(!err, 'No error when incrementing an attribute');
+            t.ok(!err, 'add: No error when incrementing an attribute');
             db.dec('chilts', ts(), 'lives', function(err) {
-                t.ok(!err, 'No error when decrementing an attribute');
+                t.ok(!err, 'add: No error when decrementing an attribute');
                 t.end();
             });
         });
@@ -71,7 +71,7 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem('chilts', function(err, changeset) {
-            t.ok(!err, 'No error when getting an item back');
+            t.ok(!err, 'add: No error when getting an item back');
 
             var newItem = {
                 nick : 'chilts',
@@ -83,7 +83,7 @@ module.exports = function(db) {
 
             console.log(changeset);
 
-            t.deepEqual(changeset.value, newItem, 'Item has been modified ok (incBy())');
+            t.deepEqual(changeset.value, newItem, 'add: Item has been modified ok (incBy())');
             t.end();
         });
     });
@@ -93,9 +93,9 @@ module.exports = function(db) {
 
     test('test incBy()', function(t) {
         db.incBy('other', ts(), 'logins', 1, function(err) {
-            t.ok(!err, 'No error when incrementing an attribute on a new item');
+            t.ok(!err, 'add: No error when incrementing an attribute on a new item');
             db.decBy('other', ts(), 'lives', 1, function(err) {
-                t.ok(!err, 'No error when decrementing an attribute on a new item');
+                t.ok(!err, 'add: No error when decrementing an attribute on a new item');
                 t.end();
             });
         });
@@ -104,7 +104,7 @@ module.exports = function(db) {
     test('test getItem()', function(t) {
         // get this item back
         db.getItem('other', function(err, changeset) {
-            t.ok(!err, 'No error when getting the other item back');
+            t.ok(!err, 'add: No error when getting the other item back');
 
             var newItem = {
                 logins : 1,
@@ -113,7 +113,7 @@ module.exports = function(db) {
 
             console.log(changeset);
 
-            t.deepEqual(changeset.value, newItem, 'Item has been modified ok (incBy())');
+            t.deepEqual(changeset.value, newItem, 'add: Item has been modified ok (incBy())');
             t.end();
         });
     });
