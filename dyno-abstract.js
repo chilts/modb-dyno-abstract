@@ -12,73 +12,73 @@ var DynoAbstract = function() {};
 // ----------------------------------------------------------------------------
 // helper functions
 
-DynoAbstract.prototype.performOp = function performOp(item, op, value) {
+DynoAbstract.prototype.performOp = function performOp(item, op, change) {
     console.log('1) item:', item);
     console.log('2) op:', op);
-    console.log('3) value:', value);
+    console.log('3) change:', change);
 
     if ( op === 'history' ) {
         // replace the entire item
-        item = value;
+        item = change;
     }
     else if ( op === 'putItem' ) {
         // replace the entire item
-        item = value;
+        item = change;
     }
     else if ( op === 'delItem' ) {
         item = {};
     }
     else if ( op === 'set' ) {
-        item = _.extend(item, value);
+        item = _.extend(item, change);
     }
     else if ( op === 'del' ) {
-        value.forEach(function(v, i) {
+        change.forEach(function(v, i) {
             delete item[v];
         });
     }
     else if ( op === 'inc' ) {
         // does these operations: inc, incBy, dec, decBy
-        if ( typeof item[value.attrName] === 'number' ) {
-            item[value.attrName] += value.by;
+        if ( typeof item[change.attrName] === 'number' ) {
+            item[change.attrName] += change.by;
         }
         else {
             // overwrite the item (since we don't ever want to error)
-            item[value.attrName] = value.by;
+            item[change.attrName] = change.by;
         }
     }
     else if ( op === 'append' ) {
         // make sure the item is a string
-        console.log('*** = ' + item[value.attrName]);
-        if ( typeof item[value.attrName] !== 'undefined' ) {
-            item[value.attrName] = '' + item[value.attrName] + value.str;
+        console.log('*** = ' + item[change.attrName]);
+        if ( typeof item[change.attrName] !== 'undefined' ) {
+            item[change.attrName] = '' + item[change.attrName] + change.str;
         }
         else {
             // just set it to the string
-            item[value.attrName] = value.str;
+            item[change.attrName] = change.str;
         }
     }
     else if ( op === 'addToSet' ) {
         // make sure the item is a string
-        console.log('*** addToSet=' + item[value.attrName]);
-        if ( value.attrName in item ) {
+        console.log('*** addToSet=' + item[change.attrName]);
+        if ( change.attrName in item ) {
             // Fix: currently we're assuming it is already an object
-            console.log('Adding value to set');
-            if ( _.isObject(item[value.attrName]) ) {
-                item[value.attrName][value.value] = true;
+            console.log('Adding change to set');
+            if ( _.isObject(item[change.attrName]) ) {
+                item[change.attrName][change.value] = true;
             }
             else {
                 // this doesn't look like an object, so we need to convert it to one (get the existing value first)
-                var existing = item[value.attrName];
-                item[value.attrName] = {};
-                item[value.attrName][existing] = true;
-                item[value.attrName][value.value] = true;
+                var existing = item[change.attrName];
+                item[change.attrName] = {};
+                item[change.attrName][existing] = true;
+                item[change.attrName][change.value] = true;
             }
         }
         else {
             // make a new object and set this value
             console.log('Adding a new attr set');
-            item[value.attrName] = {};
-            item[value.attrName][value.value] = true;
+            item[change.attrName] = {};
+            item[change.attrName][change.value] = true;
         }
     }
     return item;
