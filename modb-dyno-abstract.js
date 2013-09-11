@@ -1,4 +1,10 @@
 // ----------------------------------------------------------------------------
+//
+// modb-dyno-abstract.js
+//
+// Copyright (c) 2013 Andrew Chilton <andychilton> - http://chilts.org/blog/
+//
+// ----------------------------------------------------------------------------
 
 var crypto = require('crypto');
 
@@ -118,19 +124,25 @@ DynoAbstract.prototype.instrumentChangesets = function instrumentChangesets(chan
             if ( lastHash ) {
                 hashThis = lastHash + "\n";
             }
+            else {
+                hashThis = "\n";
+            }
             hashThis += changeset.name + "\n";
             hashThis += changeset.timestamp + "\n";
             hashThis += changeset.operation + "\n";
             hashThis += JSON.stringify(changeset.change) + "\n";
-            console.log('---');
+            console.log('--- hash ---');
             console.log(hashThis);
-            console.log('---');
 
-            // now hash it
+            // now hash it and save it onto this changeset
             currentHash = crypto.createHash('md5').update(hashThis).digest('hex');
+            console.log('--- currentHash ---');
+            changeset.hash = currentHash;
+            console.log(currentHash);
 
             // increment the number of changes
             totalChanges++;
+            changeset.changes = totalChanges;
 
             // save the actual change itself
             thisValue = changeset.change;
@@ -160,6 +172,7 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
     var totalChanges = 0;
     var lastTimestamp;
     var lastHash = '';
+    var count = 0;
 
     // Each changeset contains name, timestamp, operation. It contains 'value' if this is a regular operation, but
     // contains 'changes', 'item' and 'hash' if this is a 'history' operation.
@@ -195,13 +208,16 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
         // remember a few things
         lastTimestamp = changeset.timestamp;
         lastHash      = currentHash;
+        count++;
 
         // perform this operation
         value = self.performOp(value, changeset.operation, changeset.change);
     });
 
-    if ( Object.keys(value).length === 0 ) {
-        value = undefined;
+    if ( typeof value !== 'undefined' ) {
+        if ( Object.keys(value).length === 0 ) {
+            value = undefined;
+        }
     }
 
     // create the last changeset (minus the name and operations)
@@ -210,6 +226,7 @@ DynoAbstract.prototype.reduce = function reduce(changesets) {
         value     : value,
         changes   : totalChanges,
         hash      : lastHash,
+        count     : count,
     };
 
     return item;
@@ -344,15 +361,38 @@ DynoAbstract.prototype.flatten = function(itemName, flattenToHash, callback) {
         // instrument the changesets with their meta data
         changesets = self.instrumentChangesets(changesets);
 
+        // remember which changesets are to be deleted
+        var changesetsToBeReplaced = [];
+
         // now loop through finding the hash
         var upto;
         changesets.forEach(function(changeset, i) {
+            console.log('This hash : ', changeset.hash);
+
+            // remember this changeset
+            changesetsToBeReplaced.push(changeset);
+
+            // see if this hash is the one we need to flatten to
             if ( changeset.hash === flattenToHash ) {
                 upto = i;
             }
         });
+
         console.log('Found hash at position ' + upto);
-        callback(null, upto);
+
+        // check to see if this hash has been found
+        if ( upto ) {
+            // Now we need to remove all changes up to this point and replace them with
+            // this final one.
+            console.log("Replacing changesets:", changesetsToBeReplaced);
+            self._replace(changesetsToBeReplaced, function(err) {
+                callback(err);
+            });
+        }
+        else {
+            // no hash found
+            callback(new Error('Unknown hash ' + flattenToHash + ' for this item ' + itemName));
+        }
     });
 };
 

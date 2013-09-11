@@ -1,9 +1,9 @@
 {
-    "name" : "dyno-abstract",
+    "name" : "modb-dyno-abstract",
     "description" : "An abstract baseclass for a cornerstone of an eventually consistent key/value store.",
     "version" : "0.1.0",
 
-    "main" : "dyno-abstract.js",
+    "main" : "modb-dyno-abstract.js",
     "devDependencies" : {
         "tap" : "0.4.x"
     },
@@ -14,13 +14,13 @@
         "test" : "tap test/*.js"
     },
 
-    "homepage" : "https://github.com/chilts/dyno-abstract/",
+    "homepage" : "https://github.com/chilts/modb-dyno-abstract/",
     "repository" : {
         "type" : "git",
-        "url" : "git://github.com/chilts/dyno-abstract.git"
+        "url" : "git://github.com/chilts/modb-dyno-abstract.git"
     },
     "bugs" : {
-        "url" : "https://github.com/chilts/dyno-abstract/issues",
+        "url" : "https://github.com/chilts/modb-dyno-abstract/issues",
         "mail" : "andychilton@gmail.com"
     },
 
@@ -32,10 +32,10 @@
     "contributors" : [],
     "licenses" : [{
         "type" : "MIT",
-        "url" : "http://github.com/chilts/dyno-abstract/raw/master/LICENSE"
+        "url" : "http://github.com/chilts/modb-dyno-abstract/raw/master/LICENSE"
     }],
     "keywords" : [
-        "dyno", "dyno-abstract", "datastore", "database", "abstract", "modb", "crdt"
+        "modb", "modb-dyno", "modb-dyno-abstract", "datastore", "database", "abstract", "crdt"
     ]
 
 }

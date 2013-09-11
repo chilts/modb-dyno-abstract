@@ -40,6 +40,8 @@ module.exports = function(db) {
 
                 // test that we know what the hash is of
                 t.equal(changeset.hash, hash1, 'flatten-two: (1) The last hash of this item should be this');
+                t.equal(changeset.changes, 1, 'flatten-two: (1) The number of changes is correct');
+                t.equal(changeset.count, 1, 'flatten-two: (1) The count is correct');
 
                 var hashThis = '\nchilts\n013d58c7276e-0000-188c-786ae2e1f629\nputItem\n{"nick":"chilts"}\n';
                 var hash = crypto.createHash('md5').update(hashThis).digest('hex');
@@ -61,6 +63,8 @@ module.exports = function(db) {
 
                 // test that we know what the hash is of
                 t.equal(changeset.hash, hash2, 'flatten-two: (2) The last hash of this item should be this');
+                t.equal(changeset.changes, 2, 'flatten-two: (2) The number of changes is correct');
+                t.equal(changeset.count, 2, 'flatten-two: (2) The count is correct');
 
                 var hashThis = hash1 + "\n";
                 hashThis += "chilts\n013d58c7276f-0000-188c-786ae2e1f629\nset\n";
@@ -84,6 +88,9 @@ module.exports = function(db) {
                 t.ok(!err, 'flatten-two: (3) No error when flattening the item');
 
                 db.getItem('chilts', function(err, changeset2) {
+
+                    t.equal(changeset2.changes, 2, 'flatten-two: (3) The number of changes is correct');
+                    t.equal(changeset2.count, 1, 'flatten-two: (3) The count is correct');
 
                     t.deepEqual(changeset1.value, expectedItem, 'flatten-two: (3) Item is identical to expected');
                     t.deepEqual(changeset1.value, changeset2.value, 'flatten-two: (3) Item is identical after flattening');
