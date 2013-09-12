@@ -8,7 +8,9 @@
         "tap" : "0.4.x"
     },
     "dependencies" : {
-        "underscore" : "1.4.x"
+        "underscore" : "1.4.x",
+        "async" : "0.2.x",
+        "copy" : "0.0.x"
     },
     "scripts" : {
         "test" : "tap test/*.js"
